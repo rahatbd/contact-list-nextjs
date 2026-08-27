@@ -11,7 +11,7 @@ export default function ViewContact({params}) {
     const contact = contacts.find(contact => contact.id === params.id);
 
     useEffect(() => {
-        document.title = `All Contacts | ${contact?.name || 'View Contact'}`;
+        document.title = `Contacts | ${contact?.name || 'View Contact'}`;
     }, [contact]);
 
     return (

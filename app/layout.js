@@ -5,7 +5,7 @@ import './globals.css';
 const inter = Inter({subsets: ['latin']});
 
 export const metadata = {
-    title: 'All Contacts',
+    title: 'Contacts',
 };
 
 export const viewport = {

@@ -9,6 +9,14 @@ export default function AddContact() {
     const router = useRouter();
     const {contacts, setContacts} = useContacts();
 
+    function isEmailDuplicate(email) {
+        return contacts.some(contact => contact.email.trim().toLowerCase() === email.trim().toLowerCase());
+    }
+
+    function isPhoneDuplicate(phone) {
+        return contacts.some(contact => contact.phone === phone);
+    }
+
     function handleSubmit(formData) {
         const newContact = {id: Date.now().toString(36), ...formData};
         setContacts([...contacts, newContact]);
@@ -16,13 +24,15 @@ export default function AddContact() {
     }
 
     useEffect(() => {
-        document.title = 'All Contacts | Add Contact';
+        document.title = 'Contacts | Add Contact';
     }, []);
 
     return (
         <main>
             <h1>Add Contact</h1>
             <ContactForm
+                isEmailDuplicate={isEmailDuplicate}
+                isPhoneDuplicate={isPhoneDuplicate}
                 onSubmit={handleSubmit}
                 buttonText="Add Contact"
             />

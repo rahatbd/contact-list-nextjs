@@ -10,13 +10,19 @@
     margin-inline: auto;
 }
 
-.input {
+.field {
     display: flex;
     flex-direction: column;
     row-gap: 4px;
 }
 
-.button {
+.field small {
+    color: #ec0000;
+    font-weight: bold;
+    margin-block-start: 4px;
+}
+
+.form button {
     inline-size: max-content;
     padding: 8px 16px;
     margin-inline: auto;

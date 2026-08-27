@@ -26,7 +26,7 @@ export default function AllContacts() {
     }
 
     useEffect(() => {
-        document.title = 'All Contacts';
+        document.title = 'Contacts';
     }, []);
 
     return (

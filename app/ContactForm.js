@@ -11,11 +11,21 @@ const initialFormData = {
     phone: '',
 };
 
-export default function ContactForm({initialData = initialFormData, onSubmit, buttonText, isEditing = false}) {
+export default function ContactForm({initialData = initialFormData, isEmailDuplicate, isPhoneDuplicate, onSubmit, buttonText, isEditing = false}) {
     const [formData, setFormData] = useState(initialData);
+    const [emailError, setEmailError] = useState(false);
+    const [phoneError, setPhoneError] = useState(false);
 
     const isValid = Object.values(formData).every(value => value.trim() !== '');
     const isDirty = !isEditing || JSON.stringify(initialData) !== JSON.stringify(formData);
+    const hasErrors = emailError || phoneError;
+
+    function handleChange(event) {
+        const {id, value} = event.target;
+        setFormData({...formData, [id]: value});
+        if (id === 'email') return setEmailError(isEmailDuplicate(value));
+        if (id === 'phone') setPhoneError(isPhoneDuplicate(value));
+    }
 
     function handleSubmit(event) {
         event.preventDefault();
@@ -27,57 +37,72 @@ export default function ContactForm({initialData = initialFormData, onSubmit, bu
             onSubmit={handleSubmit}
             className={styles.form}
         >
-            <div className={styles.input}>
+            <div className={styles.field}>
                 <label htmlFor="name">Name</label>
                 <input
                     id="name"
                     placeholder="Enter name"
                     value={formData.name}
-                    onChange={event => setFormData({...formData, name: event.target.value})}
+                    onChange={handleChange}
                     required
                 />
             </div>
-            <div className={styles.input}>
-                <label htmlFor="image">Image URL</label>
+            <div className={styles.field}>
+                <label htmlFor="image_url">Image URL</label>
                 <input
                     type="url"
-                    id="image"
+                    id="image_url"
                     placeholder="Enter image URL"
                     value={formData.image_url}
-                    onChange={event => setFormData({...formData, image_url: event.target.value})}
+                    onChange={handleChange}
                     required
                 />
             </div>
-            <div className={styles.input}>
+            <div className={styles.field}>
                 <label htmlFor="email">Email</label>
                 <input
                     type="email"
                     id="email"
                     placeholder="Enter email"
+                    aria-describedby={emailError ? 'email-error' : undefined}
+                    aria-invalid={emailError}
                     value={formData.email}
-                    onChange={event => setFormData({...formData, email: event.target.value})}
+                    onChange={handleChange}
                     required
                 />
+                {emailError && (
+                    <small
+                        id="email-error"
+                        role="alert"
+                    >
+                        Email already exists.
+                    </small>
+                )}
             </div>
-            <div className={styles.input}>
+            <div className={styles.field}>
                 <label htmlFor="phone">Phone</label>
                 <input
                     type="tel"
                     id="phone"
                     placeholder="437-555-0000"
                     pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                    aria-describedby={phoneError ? 'phone-error' : undefined}
+                    aria-invalid={phoneError}
                     value={formData.phone}
-                    onChange={event => setFormData({...formData, phone: event.target.value})}
+                    onChange={handleChange}
                     required
                 />
+                {phoneError && (
+                    <small
+                        id="phone-error"
+                        role="alert"
+                    >
+                        Phone already exists.
+                    </small>
+                )}
             </div>
             <small>All fields are required.</small>
-            <button
-                className={styles.button}
-                disabled={!isValid || !isDirty}
-            >
-                {buttonText}
-            </button>
+            <button disabled={!isValid || !isDirty || hasErrors}>{buttonText}</button>
         </form>
     );
 }
@@ -89,6 +114,8 @@ ContactForm.propTypes = {
         email: PropTypes.string.isRequired,
         phone: PropTypes.string.isRequired,
     }),
+    isEmailDuplicate: PropTypes.func.isRequired,
+    isPhoneDuplicate: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
     buttonText: PropTypes.string.isRequired,
     isEditing: PropTypes.bool,
