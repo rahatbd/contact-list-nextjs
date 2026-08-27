@@ -1,0 +1,23 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    row-gap: 16px;
+    border-radius: 8px;
+    background-color: light-dark(var(--bg-light), var(--bg-dark));
+    max-inline-size: 500px;
+    padding: 24px;
+    margin-block-start: 24px;
+    margin-inline: auto;
+}
+
+.input {
+    display: flex;
+    flex-direction: column;
+    row-gap: 4px;
+}
+
+.button {
+    inline-size: max-content;
+    padding: 8px 16px;
+    margin-inline: auto;
+}
